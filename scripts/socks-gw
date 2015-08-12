@@ -1,0 +1,34 @@
+#!/bin/bash
+bypass=
+forced=
+discerned=1
+connect_bin=connect-proxy
+raw="$1"
+if [[ $1 == --bypass ]]; then
+	bypass=true
+	shift
+elif [[ $1 == --force ]]; then
+	shift
+else
+	discerned=''
+fi
+
+host=$1
+port=$2
+
+if [[ $host == home ]]; then
+	host=$(grep 'home$' /etc/hosts | cut -d ' ' -f1 | head -n 1)
+elif [[ -z $discerned ]]; then
+	if echo "$host" | grep -E "\.intel\.com($|/)" &> /dev/null; then
+		bypass=true
+	elif [[ -z $discerned ]] && dig -x "$host" | grep -i intel &> /dev/null; then
+		bypass=true
+	fi
+fi
+
+
+if [[ -n $bypass ]]; then
+	exec "${connect_bin}" "$host" "$port"
+else
+	exec "${connect_bin}" -S "proxy-socks.jf.intel.com:1080" "$host" "$port"
+fi

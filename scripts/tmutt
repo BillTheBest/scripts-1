@@ -1,0 +1,5 @@
+#!/bin/sh
+
+exec $HOME/bin/tsocks "/usr/bin/mutt" "$@"
+
+

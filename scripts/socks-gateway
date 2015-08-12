@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PROXY_FILE="/var/tmp/proxy-mode"
+CONNECT_BIN=/usr/bin/connect-proxy
+
+if [ -f "$PROXY_FILE" ]; then
+
+case $1 in
+    *.intel.com|192.168.*|127.0.*|localhost|10.*)
+        METHOD=" "
+    ;;
+    *)
+        METHOD="--proxy-type socks5 --proxy-auth SOCKS --proxy proxy-us.intel.com:1080"
+    ;;
+esac
+
+/usr/bin/nc $METHOD $*
+
+else
+
+exec $CONNECT_BIN $*
+
+fi

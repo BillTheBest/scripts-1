@@ -1,0 +1,5 @@
+#!/bin/sh
+
+TSOCKS_CONF_FILE=$HOME/.tsocks.conf
+export TSOCKS_CONF_FILE
+exec /usr/bin/tsocks "$@"
